@@ -1,0 +1,15 @@
+server:
+  port: 8082
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/capstone_db
+    username: springstudent
+    password: springstudent
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    # Minimal config since we do a consumer factory in code
