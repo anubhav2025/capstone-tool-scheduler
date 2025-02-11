@@ -82,12 +82,12 @@ public class GitHubScanService {
             String alertsJson = matchedService.fetchAlerts(dto.getOwner(),
                     dto.getRepository(), pat);
 
-            List<Map<String, Object>> alerts = objectMapper.readValue(alertsJson, new TypeReference<List<Map<String, Object>>>() {});
-            String finalData = objectMapper.writeValueAsString(alerts);
+            // List<Map<String, Object>> alerts = objectMapper.readValue(alertsJson, new TypeReference<List<Map<String, Object>>>() {});
+            // String finalData = objectMapper.writeValueAsString(alerts);
 
             // 3.2. Write to file
             String filePath = writeToFile(toolType, dto.getOwner(),
-                    dto.getRepository(), finalData);
+                    dto.getRepository(), alertsJson); 
             
             // after saving file in directory save file to 
             ParseJobEvent parseEvent = new ParseJobEvent(toolType.name().toLowerCase(), filePath);
