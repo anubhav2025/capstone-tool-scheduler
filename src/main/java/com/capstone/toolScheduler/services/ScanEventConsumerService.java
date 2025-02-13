@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.capstone.toolScheduler.dto.ScanEventDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 
 /**
  * Consumes messages from "scan-topic" and calls GitHubScanService.
@@ -23,11 +22,12 @@ public class ScanEventConsumerService {
     }
 
     @KafkaListener(
-        topics = "scan-topic", 
+        topics = "scan-topic",
         groupId = "tool-scheduler-group",
         containerFactory = "kafkaListenerContainerFactory"
     )
-    public void consumeScanEvent(@Payload ScanEventDTO eventDTO) throws JsonMappingException, JsonProcessingException {
+    public void consumeScanEvent(@Payload ScanEventDTO eventDTO) throws JsonProcessingException {
+        // The new eventDTO has tenantId + tools
         String summary = gitHubScanService.scanAndStore(eventDTO);
         System.out.println("Scan complete:\n" + summary);
     }
