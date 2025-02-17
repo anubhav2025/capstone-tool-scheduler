@@ -1,37 +1,42 @@
 package com.capstone.toolScheduler.services;
 
-import com.capstone.toolScheduler.dto.ParseJobEvent;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
+import com.capstone.toolScheduler.dto.event.ParseRequestEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ParseJobProducerService {
 
-    private final Producer<String, ParseJobEvent> parseJobProducer;
+    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Value("${parser.kafka.topic:parser-topic}")
-    private String parserTopic;
+    // Topic name defined in application.yml or fallback to "parser-topic"
+    @Value("${spring.kafka.topic}")
+    private String topic;
 
-    public ParseJobProducerService(Producer<String, ParseJobEvent> parseJobProducer) {
-        this.parseJobProducer = parseJobProducer;
+    public ParseJobProducerService(KafkaTemplate<String, String> kafkaTemplate) {
+        this.kafkaTemplate = kafkaTemplate;
     }
 
-    /**
-     * Publish a ParseJobEvent to the "parser-topic".
-     */
-    public void sendParseJobEvent(ParseJobEvent event) {
-        ProducerRecord<String, ParseJobEvent> record = new ProducerRecord<>(parserTopic, event);
-
-        parseJobProducer.send(record, (metadata, exception) -> {
-            if (exception != null) {
-                System.err.println("Failed to send ParseJobEvent: " + exception.getMessage());
-            } else {
-                System.out.println("ParseJobEvent sent to topic=" + metadata.topic() 
-                    + " partition=" + metadata.partition() 
-                    + " offset=" + metadata.offset());
-            }
-        });
+    public void sendParseJobEvent(ParseRequestEvent event) {
+        try {
+            // Convert the event to JSON
+            String jsonPayload = objectMapper.writeValueAsString(event);
+            kafkaTemplate.send(topic, jsonPayload).whenComplete((result, exception) -> {
+                if (exception != null) {
+                    System.err.println("Failed to send ParseRequestEvent: " + exception.getMessage());
+                } else {
+                    var metadata = result.getRecordMetadata();
+                    System.out.println("ParseRequestEvent sent to topic=" + metadata.topic() +
+                            " partition=" + metadata.partition() +
+                            " offset=" + metadata.offset());
+                }
+            });
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
     }
 }

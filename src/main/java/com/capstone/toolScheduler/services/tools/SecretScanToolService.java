@@ -22,7 +22,7 @@ public class SecretScanToolService implements ToolScanService {
 
     @Override
     public String getToolName() {
-        return "secretscan";
+        return "secret_scan";
     }
 
     @Override
@@ -53,18 +53,5 @@ public class SecretScanToolService implements ToolScanService {
 
         String finalData = objectMapper.writeValueAsString(totalAlerts);
         return finalData;
-
-
-
-
-
-        // String url = "https://api.github.com/repos/" + owner + "/" + repository + "/secret-scanning/alerts";
-        // return webClientBuilder.build()
-        //         .get()
-        //         .uri(url)
-        //         .header("Authorization", "Bearer " + token)
-        //         .retrieve()
-        //         .bodyToMono(String.class)
-        //         .block();
     }
 }

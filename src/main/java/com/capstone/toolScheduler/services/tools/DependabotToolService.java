@@ -54,16 +54,5 @@ public class DependabotToolService implements ToolScanService {
 
         String finalData = objectMapper.writeValueAsString(totalAlerts);
         return finalData;
-
-
-
-        // String url = "https://api.github.com/repos/" + owner + "/" + repository + "/dependabot/alerts";
-        // return webClientBuilder.build()
-        //         .get()
-        //         .uri(url)
-        //         .header("Authorization", "Bearer " + token)
-        //         .retrieve()
-        //         .bodyToMono(String.class)
-        //         .block();
     }
 }

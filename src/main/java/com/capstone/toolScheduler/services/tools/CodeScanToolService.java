@@ -23,7 +23,7 @@ public class CodeScanToolService implements ToolScanService {
 
     @Override
     public String getToolName() {
-        return "codescan";
+        return "code_scan";
     }
 
     @Override
@@ -54,44 +54,5 @@ public class CodeScanToolService implements ToolScanService {
 
         String finalData = objectMapper.writeValueAsString(totalAlerts);
         return finalData;
-
-
-
-
-
-
-        // String response = "";
-        // int page = 1;
-        // int perPage = 100;
-
-        // while(true){
-        //     String url = "https://api.github.com/repos/" + owner + "/" + repository + "/code-scanning/alerts?per_page=" + perPage + "&page=" + page;
-        //     String responseData = webClientBuilder.build()
-        //             .get()
-        //             .uri(url)
-        //             .header("Authorization", "Bearer " + token)
-        //             .retrieve()
-        //             .bodyToMono(String.class)
-        //             .block();
-
-        //     if(responseData.isEmpty()) break;
-        //     else{
-        //         response += responseData;
-        //         page++;
-        //     }
-
-        // }
-
-        // return response;
-
-
-        // String url = "https://api.github.com/repos/" + owner + "/" + repository + "/code-scanning/alerts";
-        // return webClientBuilder.build()
-        //         .get()
-        //         .uri(url)
-        //         .header("Authorization", "Bearer " + token)
-        //         .retrieve()
-        //         .bodyToMono(String.class)
-        //         .block();
     }
 }
