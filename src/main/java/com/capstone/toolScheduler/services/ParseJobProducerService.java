@@ -14,7 +14,7 @@ public class ParseJobProducerService {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     // Topic name defined in application.yml or fallback to "parser-topic"
-    @Value("${spring.kafka.topic}")
+    @Value("job_ingestion_topic")
     private String topic;
 
     public ParseJobProducerService(KafkaTemplate<String, String> kafkaTemplate) {
